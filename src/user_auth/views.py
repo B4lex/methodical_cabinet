@@ -1,15 +1,41 @@
-from django.shortcuts import render, HttpResponse, redirect, reverse
-from django.http import HttpRequest
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView
+from django.views.generic.edit import FormView
+from django.contrib.auth import login, authenticate
+from django.shortcuts import redirect
 
-# Create your views here.
+from user_auth.forms import UserSignUpForm
 
 
-def login(request):
-    if (request.user.is_authenticated):
-        return render(request, 'login.html')
-    else:
-        return redirect(reverse('user-register'))
+class UserLoginView(LoginView):
+    template_name = 'login.html'
 
-def register(request):
-    return HttpResponse('Registration form.')
 
+class UserSignUpView(FormView):
+    template_name = 'signup.html'
+    form_class = UserSignUpForm
+    success_url = reverse_lazy('admin:index')
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        # DEBUG: in order to login admin panel
+        user.is_staff = True
+        user.is_superuser = True
+        # ---
+        user.save()
+        user = authenticate(
+            username=form.cleaned_data.get('username'),
+            password=form.cleaned_data.get('password1'),
+        )
+        login(self.request, user)
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse_lazy('admin:index'))
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse_lazy('admin:index'))
+        return super().post(request, *args, **kwargs)
