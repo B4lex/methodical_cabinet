@@ -1,5 +1,5 @@
-from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
@@ -9,12 +9,14 @@ from user_auth.forms import UserSignUpForm
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('cabinet-index')
 
 
 class UserSignUpView(FormView):
     template_name = 'signup.html'
     form_class = UserSignUpForm
-    success_url = reverse_lazy('admin:index')
+    success_url = reverse_lazy('cabinet-index')
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -32,10 +34,14 @@ class UserSignUpView(FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse_lazy('admin:index'))
+            return redirect(self.success_url)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse_lazy('admin:index'))
+            return redirect(self.success_url)
         return super().post(request, *args, **kwargs)
+
+
+class UserLogoutView(LogoutView):
+    next_page = '/'
