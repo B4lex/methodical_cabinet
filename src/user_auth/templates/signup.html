@@ -7,26 +7,35 @@
 {% block content %}
     <form method="POST" class="center-block">
         {% csrf_token %}
-<!--        <p>-->
-<!--            {{ form.username.label }}<br>-->
-<!--            {{ form.username }}-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            {{ form.email.label }}<br>-->
-<!--            {{ form.email }}-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            {{ form.password1.label }}<br>-->
-<!--            {{ form.password1 }}-->
-<!--        </p>-->
-<!--        <p>-->
-<!--            {{ form.password2.label }}<br>-->
-<!--            {{ form.password2 }}-->
-<!--            <div class="alert alert-info" style="max-width: 30%;">-->
-<!--                <strong>{{ form.password2.help_text }}</strong>-->
-<!--            </div>-->
-<!--        </p>-->
-        {{ form.as_p }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username }}
+            {% for error in form.username.errors %}
+            <div class="alert alert-danger" style="max-width: 30%;">
+                <strong>{{ error }}</strong>
+            </div>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email }}
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger" style="max-width: 30%;">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password1.label }}<br>
+            {{ form.password1 }}
+        </p>
+        <p>
+            {{ form.password2.label }}<br>
+            {{ form.password2 }}
+            <div class="alert alert-info" style="max-width: 30%;">
+                <strong>{{ form.password2.help_text }}</strong>
+            </div>
+        </p>
         <button type="submit" class="btn btn-primary">Sign up</button>
     </form>
 {% endblock %}

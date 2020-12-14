@@ -8,5 +8,5 @@ class UserSignUpForm(UserCreationForm):
 
     class Meta:
         model = Teacher
-        fields = ("username", )
+        fields = ("username", "email")
         field_classes = {'username': UsernameField}

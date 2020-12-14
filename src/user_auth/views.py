@@ -10,7 +10,6 @@ from user_auth.forms import UserSignUpForm
 class UserLoginView(LoginView):
     template_name = 'login.html'
     redirect_authenticated_user = True
-    success_url = reverse_lazy('cabinet-index')
 
 
 class UserSignUpView(FormView):
@@ -28,6 +27,7 @@ class UserSignUpView(FormView):
         user = authenticate(
             username=form.cleaned_data.get('username'),
             password=form.cleaned_data.get('password1'),
+            email=form.cleaned_data.get('email')
         )
         login(self.request, user)
         return super().form_valid(form)

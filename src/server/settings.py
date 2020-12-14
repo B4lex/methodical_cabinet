@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -125,3 +125,4 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 AUTH_USER_MODEL = 'user_auth.Teacher'
 LOGIN_URL = reverse_lazy('user-login')
+LOGIN_REDIRECT_URL = reverse_lazy('cabinet-index')

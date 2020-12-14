@@ -1,0 +1,18 @@
+{% extends 'base_template.html' %}
+
+{% block title %}
+    Edit Profile
+{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}
