@@ -2,14 +2,20 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from slugify import slugify
+
+
+def get_photo_upload_path(instance, filename):
+    return f'teachers/photos/{slugify(instance.full_name)}.{filename.split(".")[-1]}'
+
 
 class Teacher(AbstractUser):
     full_name = models.CharField(max_length=255, null=True)
     email = models.EmailField(error_messages={
-        'unique': _('Пользователь с таким электронным адресом уже существует')
+            'unique': _('Пользователь с таким электронным адресом уже существует')
         }, unique=True, null=True, blank=True)
     email_verification = models.DateTimeField(null=True, blank=True)
-    photo = models.ImageField(null=True, blank=True)
+    photo = models.ImageField(upload_to=get_photo_upload_path, null=True, blank=True)
     qualification_category = models.ForeignKey(
         'cabinet.QualificationCategory',
         on_delete=models.SET_NULL,
