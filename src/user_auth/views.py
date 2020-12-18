@@ -1,8 +1,13 @@
-from django.urls import reverse_lazy
+import hashlib
+from datetime import datetime
+
+# from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
+from django.conf import settings
 
 from user_auth.forms import UserSignUpForm
 
@@ -15,7 +20,7 @@ class UserLoginView(LoginView):
 class UserSignUpView(FormView):
     template_name = 'signup.html'
     form_class = UserSignUpForm
-    success_url = reverse_lazy('cabinet-index')
+    success_url = settings.LOGIN_REDIRECT_URL
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -45,3 +50,39 @@ class UserSignUpView(FormView):
 
 class UserLogoutView(LogoutView):
     next_page = '/'
+
+
+class EmailConfirmationView(TemplateView):
+    template_name = 'email_confirmation_info.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.email_verification:
+            token = request.GET.get('token')
+            if token and token_is_valid(request.user, token):
+                request.user.email_verification = datetime.now()
+                request.user.save()
+                return UserSignUpView.success_url
+            else:
+                with open(r'C:\mails\test_mail.txt', 'w') as mail:
+                    mail.write(generate_token(request.user))
+                return super().get(request, *args, **kwargs)
+        else:
+            return redirect(settings.LOGIN_REDIRECT_URL)
+
+
+def generate_token(user):
+    return hashlib.sha256(
+        user.date_joined.strftime('%Y%m%d%H%M%S%f').encode('utf-8')
+    ).hexdigest()
+
+
+def token_is_valid(user, token):
+    return generate_token(user) == token
+
+
+class EmailConfirmationRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.email_verification:
+            return redirect('user-email-confirmation')
+        else:
+            return super().dispatch(request, *args, **kwargs)

@@ -1,21 +1,22 @@
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import UpdateView, ModelFormMixin
+from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.shortcuts import redirect
-from django.core.files import File
 
 from user_auth.models import Teacher
+from user_auth.views import EmailConfirmationRequiredMixin
 from cabinet.forms import CabinetEditForm
 
 
-class CabinetMainPageView(LoginRequiredMixin, TemplateView):
+class CabinetMainPageView(EmailConfirmationRequiredMixin,
+                          LoginRequiredMixin, TemplateView):
     template_name = 'cabinet.html'
 
 
-class CabinetEditPageView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+class CabinetEditPageView(EmailConfirmationRequiredMixin, SuccessMessageMixin,
+                          LoginRequiredMixin, UpdateView):
     model = Teacher
     form_class = CabinetEditForm
     template_name = 'cabinet_edit.html'
