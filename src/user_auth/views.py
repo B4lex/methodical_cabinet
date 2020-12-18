@@ -1,13 +1,14 @@
 import hashlib
-from datetime import datetime
 
-# from django.urls import reverse_lazy
+from django.utils import timezone
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect
 from django.conf import settings
+from django.core.mail import send_mail
+from django.utils.translation import gettext_lazy as _
 
 from user_auth.forms import UserSignUpForm
 
@@ -56,15 +57,17 @@ class EmailConfirmationView(TemplateView):
     template_name = 'email_confirmation_info.html'
 
     def get(self, request, *args, **kwargs):
-        if not request.user.email_verification:
+        user = request.user
+        if not user.email_verification:
             token = request.GET.get('token')
             if token and token_is_valid(request.user, token):
-                request.user.email_verification = datetime.now()
-                request.user.save()
+                user.email_verification = timezone.now()
+                user.save()
                 return UserSignUpView.success_url
             else:
-                with open(r'C:\mails\test_mail.txt', 'w') as mail:
-                    mail.write(generate_token(request.user))
+                # for debug need to be replaced with mail sending
+                message = f'http://127.0.0.1:8000/confirm?token={generate_token(user)}'
+                send_mail(_('No Reply'), message, settings.EMAIL_HOST_USER, [user.email])
                 return super().get(request, *args, **kwargs)
         else:
             return redirect(settings.LOGIN_REDIRECT_URL)
