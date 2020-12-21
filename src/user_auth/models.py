@@ -10,6 +10,7 @@ def get_photo_upload_path(instance, filename):
 
 
 class Teacher(AbstractUser):
+    username = None  # excluding username from AbstractUser
     full_name = models.CharField(max_length=255, null=True)
     email = models.EmailField(error_messages={
             'unique': _('Пользователь с таким электронным адресом уже существует')
@@ -38,6 +39,9 @@ class Teacher(AbstractUser):
     awards = models.TextField(blank=True, null=True)
     social_networks_link = models.URLField(blank=True, null=True)  # may need to be used with Postgres ArrayField
     youtube_link = models.URLField(blank=True, null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('Преподаватель')

@@ -1,7 +1,7 @@
 import hashlib
 
 from django.utils import timezone
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
@@ -31,9 +31,8 @@ class UserSignUpView(FormView):
         # ---
         user.save()
         user = authenticate(
-            username=form.cleaned_data.get('username'),
+            email=form.cleaned_data.get('email'),
             password=form.cleaned_data.get('password1'),
-            email=form.cleaned_data.get('email')
         )
         login(self.request, user)
         return super().form_valid(form)
@@ -63,11 +62,10 @@ class EmailConfirmationView(TemplateView):
             if token and token_is_valid(request.user, token):
                 user.email_verification = timezone.now()
                 user.save()
-                return UserSignUpView.success_url
+                return redirect(UserSignUpView.success_url)
             else:
-                # for debug need to be replaced with mail sending
                 message = f'http://127.0.0.1:8000/confirm?token={generate_token(user)}'
-                send_mail(_('No Reply'), message, settings.EMAIL_HOST_USER, [user.email])
+                send_mail(_('Методический кабинет'), message, settings.EMAIL_HOST_USER, [user.email])
                 return super().get(request, *args, **kwargs)
         else:
             return redirect(settings.LOGIN_REDIRECT_URL)

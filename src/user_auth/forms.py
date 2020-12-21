@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.contrib.auth.forms import UserCreationForm
 from user_auth.models import Teacher
 
 
@@ -8,5 +8,4 @@ class UserSignUpForm(UserCreationForm):
 
     class Meta:
         model = Teacher
-        fields = ("username", "email")
-        field_classes = {'username': UsernameField}
+        fields = ("full_name", "email")

@@ -7,7 +7,7 @@ class CabinetEditForm(forms.ModelForm):
     class Meta:
         model = Teacher
         exclude = (
-            'first_name', 'last_name', 'date_joined',
+            'first_name', 'last_name', 'date_joined', 'email_verification',
             'password', 'last_login', 'is_superuser', 'groups',
-            'username', 'is_staff', 'is_active', 'user_permissions'
+            'is_staff', 'is_active', 'user_permissions'
         )

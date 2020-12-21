@@ -25,3 +25,8 @@ class CabinetEditPageView(EmailConfirmationRequiredMixin, SuccessMessageMixin,
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['is_email_confirmed'] = True if self.get_object().email_verification else False
+        return context_data
