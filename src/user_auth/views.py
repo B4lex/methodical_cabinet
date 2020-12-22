@@ -1,7 +1,7 @@
 import hashlib
 
 from django.utils import timezone
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
+import django.contrib.auth.views as auth_views
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from user_auth.forms import UserSignUpForm
 
 
-class UserLoginView(LoginView):
+class UserLoginView(auth_views.LoginView):
     template_name = 'login.html'
     redirect_authenticated_user = True
 
@@ -48,7 +48,7 @@ class UserSignUpView(FormView):
         return super().post(request, *args, **kwargs)
 
 
-class UserLogoutView(LogoutView):
+class UserLogoutView(auth_views.LogoutView):
     next_page = '/'
 
 
@@ -83,7 +83,32 @@ def token_is_valid(user, token):
 
 class EmailConfirmationRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.email_verification:
+        if request.user.is_authenticated and not request.user.email_verification:
             return redirect('user-email-confirmation')
-        else:
+        return super().dispatch(request, *args, **kwargs)
+
+
+class HandleArbitraryPasswordResetMixin:
+    def dispatch(self, request, *args, **kwargs):
+        print(request.META.get('HTTP_REFERER'))
+        if request.META.get('HTTP_REFERER') and not request.user.is_authenticated:
             return super().dispatch(request, *args, **kwargs)
+        return redirect('password_reset')
+
+
+class PasswordResetView(auth_views.PasswordResetView):
+    template_name = 'password_reset/password_reset.html'
+
+
+class PasswordResetDoneView(HandleArbitraryPasswordResetMixin,
+                            auth_views.PasswordResetDoneView):
+    template_name = 'password_reset/password_reset_done.html'
+
+
+class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'password_reset/password_reset_confirm.html'
+
+
+class PasswordResetCompleteView(HandleArbitraryPasswordResetMixin,
+                                auth_views.PasswordResetCompleteView):
+    template_name = 'password_reset/password_reset_complete.html'
