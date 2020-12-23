@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse_lazy
+from django.contrib.sites.shortcuts import get_current_site
 
 from user_auth.forms import UserSignUpForm
 
@@ -64,8 +66,13 @@ class EmailConfirmationView(TemplateView):
                 user.save()
                 return redirect(UserSignUpView.success_url)
             else:
-                message = f'http://127.0.0.1:8000/confirm?token={generate_token(user)}'
-                send_mail(_('Методический кабинет'), message, settings.EMAIL_HOST_USER, [user.email])
+                message = (f'http://{get_current_site(request)}'
+                           f'{reverse_lazy("user-email-confirmation")}'
+                           f'?token={generate_token(user)}')
+                send_mail(_('Методический кабинет'),
+                          message,
+                          settings.EMAIL_HOST_USER,
+                          [user.email])
                 return super().get(request, *args, **kwargs)
         else:
             return redirect(settings.LOGIN_REDIRECT_URL)
