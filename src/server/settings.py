@@ -139,7 +139,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_URL = reverse_lazy('user-login')
-LOGIN_REDIRECT_URL = reverse_lazy('cabinet-index')
+LOGIN_REDIRECT_URL = reverse_lazy('cabinet:index')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

@@ -9,7 +9,19 @@
                 <a class="btn btn-secondary btn-lg mb-2" href="{% url 'user-logout' %}">Logout</a>
             </li>
             <li class="nav-item mx-1">
-                <a class="btn btn-primary btn-lg mb-2" href="{% url 'cabinet-edit' %}">Edit profile</a>
+                <a class="btn btn-primary btn-lg mb-2" href="{% url 'cabinet:edit-profile' %}">Edit profile</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="btn btn-primary btn-lg mb-2" href="{% url 'cabinet:teaching-materials' %}">Учебные материалы</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="btn btn-primary btn-lg mb-2" href="">Публикации</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="btn btn-primary btn-lg mb-2" href="{% url 'cabinet:add-teaching-material' %}">Добавить учебный материал</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="btn btn-primary btn-lg mb-2" href="">Добавить публикацию</a>
             </li>
             {% if request.user.is_staff %}
                 <li class="nav-item mx-1">

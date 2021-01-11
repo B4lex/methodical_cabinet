@@ -1,0 +1,18 @@
+{% extends 'base_template.html' %}
+
+{% block title %}Учебные материалы{% endblock %}
+
+{% block content %}
+    {% for object in object_list %}
+        <div class="container shadow-lg p-3 mb-5 rounded bg-light" style="text-align: center">
+            <p>
+                <strong>{{ object.name }}</strong>
+                <span class="text-secondary">{{ object.created_at }}</span>
+            </p>
+            <p>
+                {{ object.description }}<br>
+                {{ object.target_file }}
+            </p>
+        </div>
+    {% endfor %}
+{% endblock %}
