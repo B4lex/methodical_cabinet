@@ -1,0 +1,16 @@
+:root{
+    /* color */
+    --theme-grey-color:#f1f1f1;
+    --theme-blue-color:#427aa1;
+    --title-color:#304058;
+    --text-color:#7b808c;
+    /* text-style */
+    --title-size:28px;
+    --text-size:16px;
+    --text-style:'Roboto';
+    --title-weight:500;
+    --subtitle-weigh:400;
+    --text-weight:300;
+    /* header */
+    --header-padding:230px;
+}

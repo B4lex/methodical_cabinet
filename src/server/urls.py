@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('user_auth.urls')),
-    path('cabinet/', include('cabinet.urls'))
+    path('cabinet/', include('cabinet.urls')),
+    path('', RedirectView.as_view(pattern_name='cabinet:index'))  # FIXME: Temporary solution
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

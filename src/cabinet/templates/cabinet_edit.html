@@ -1,10 +1,10 @@
-{% extends 'base_template.html' %}
+{% extends 'cabinet_index.html' %}
 
 {% block title %}
     Edit Profile
 {% endblock %}
 
-{% block content %}
+{% block cab_content %}
     {% for message in messages %}
         <div class="alert alert-success" role="alert">
             {{ message }}

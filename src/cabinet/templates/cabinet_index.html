@@ -1,0 +1,83 @@
+{% extends 'base_template.html' %}
+{% load static %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{% static 'cabinet/css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <script src="{% static 'cabinet/js/cabinet.js' %}"></script>
+{% endblock %}
+
+{% block title %}Cabinet{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+
+        <div class="container">
+            <header class="header">
+                <div class="head-upper">
+                    <img src="{{ request.user.photo.url }}" alt="">
+                    <h1 class="title">
+                        {{ request.user.full_name }}
+                    </h1>
+                </div>
+                <div class="head-lower">
+                    <h1 class="title">Васюк Василиса Василиевна</h1>
+                    <p class="head-info">Учитель высшей категории</p>
+                    <p class="head-info">Предмет - информатика</p>
+                    <p class="head-info">Опыт работы - 10 лет</p>
+                </div>
+            </header>
+            <div class="page-content">
+                <div class="side-bar">
+                    <ul>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'cabinet:edit-profile' %}">Общая информация</a>
+                        </li>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'cabinet:teaching-materials' %}">Учебные материлы</a>
+                        </li>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'cabinet:scientific-materials' %}"> Публикации</a>
+                        </li>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'cabinet:add-teaching-material' %}">Добавить учебный материал</a>
+                        </li>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'cabinet:add-scientific-material' %}">Добавить публикацию</a>
+                        </li>
+                        <li class="side-bar-menu" id="btn">
+                            <a href="{% url 'user-logout' %}">Выйти</a>
+                        </li>
+                        {% if request.user.is_staff %}
+                            <li class="side-bar-menu btn btn-outline-danger" onclick="rename()" id="btn">
+                                <a href="{% url 'admin:index' %}">Admin panel</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="news-line">
+                    <div class="news-title">
+                        <h1 class="title">
+                            {{ cabinet_pt_title }}
+                        </h1>
+                        <div class="cabinet-content">
+                            {% block cab_content %}
+                            {% endblock %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="mobile-nav">
+        <ul>
+            <li class="mobile-nav-link"><button>+</button></li>
+            <li class="mobile-nav-link"><button>+</button></li>
+            <li class="mobile-nav-link"><button>+</button></li>
+            <li class="mobile-nav-link"><button>+</button></li>
+        </ul>
+    </div>
+{% endblock %}
